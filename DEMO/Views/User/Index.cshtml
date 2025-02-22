@@ -1,0 +1,59 @@
+﻿@model List<User>
+@{
+
+}
+    
+    <h2 class="text-center mb-5">List to Users</h2>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NickName</th>
+                <th>Email</th>
+                <th>Action</th>
+                <th>Creat At</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var User in Model)
+            {
+                <tr>
+                    <td>@User.userId</td>
+                    <td>@User.nickName</td>
+                    <td>@User.email</td>
+                    <td>@User.userRole</td>
+                    <td>@User.createAt.ToString("MM/dd/yyyy")</td>
+                <td style="white-space:nowrap">
+                    <button id="disableBtn-@User.userId" class="btn btn-warning btn-sm" onclick="disableUser(@User.userId, this)" @(User.IsActive ? "" : "disabled style='background-color: gray; border-color: gray;'")>
+                        @(User.IsActive ? "Disable" : "Disabled")
+                    </button>
+                </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+<script>
+    function disableUser(userId, button) {
+        if (!confirm("Bạn có chắc chắn muốn vô hiệu hóa người dùng này?")) return;
+
+        $.post('/User/DisableUser', { id: userId }, function (response) {
+            if (response.success) {
+                alert("Người dùng đã bị vô hiệu hóa!");
+                $(button).text("Disabled").prop("disabled", true).css({
+                    "background-color": "gray",
+                    "border-color": "gray"
+                });
+            } else {
+                alert("Lỗi! Không thể vô hiệu hóa người dùng.");
+            }
+        });
+    }
+</script>
+
+
